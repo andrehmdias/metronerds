@@ -1,0 +1,205 @@
+/* No topo do seu CSS, importe a fonte Inter (irmã da Helvetica) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif; /* Aplica para o site todo */
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+/* --- AREA DO CABEÇALHO --- */
+
+.faixa-topo {
+    width: 100%;
+    height: 15px; 
+    background-color: #0455A1; /* Azul Linha 1 */
+    margin-bottom: 30px; 
+}
+
+.area-titulo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+}
+
+h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 900;
+    letter-spacing: -2px;
+    color: #1a1a1a; /* Texto escuro de volta */
+    margin: 0 0 10px 0; /* Margem apenas embaixo */
+    text-align: center;
+}
+
+.legenda {
+    color: #666666; /* Cinza para não brigar com o título */
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem;
+    text-align: center;
+    margin: 0 0 15px 0; /* Fica entre o título e as cores */
+    max-width: 600px;
+}
+
+.faixa-cores-base {
+    width: 210px; 
+    height: 10px;
+    margin-bottom: 30px; /* Espaço antes do mapa */
+    background: linear-gradient(to right, 
+        #0455A1 0% 16.6%, 
+        #008061 16.6% 33.3%, 
+        #EE3E34 33.3% 50%, 
+        #F0D200 50% 66.6%, 
+        #A54499 66.6% 83.3%, 
+        #8A8C8E 83.3% 100%
+    );
+}
+
+/* --- FIM DA AREA DO CABEÇALHO --- */
+
+
+#palpiteInput {
+    width: 100%;
+    flex: 1;            /* O input cresce para ocupar o espaço disponível... */
+    max-width: 400px;   /* ...mas para de crescer em 400px */
+    min-width: 200px;   /* E nunca fica menor que 200px */
+    padding: 12px;
+}
+
+button {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+#controles {
+    display: flex;
+    flex-wrap: wrap;      /* Se não couber um do lado do outro, o botão pula pra baixo */
+    justify-content: center;
+    gap: 15px;
+    padding: 10px;
+}
+
+#mapaDiv {
+    width: 95%;          /* No celular, ocupa quase tudo */
+    max-width: 800px;     /* No computador, trava em 800px */
+    height: 350px;        /* Altura fixa ou use 'vh' para ser proporcional à tela */
+    margin: 0 auto;
+    border-radius: 12px;
+    pointer-events: none; /* Isso faz com que qualquer clique "atravesse" o mapa como se ele fosse um fantasma */
+}
+
+#lista-palpites {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.card-palpite {
+    background-color: #f8f9fa;
+    /* Removemos a border-left daqui */
+    border-radius: 8px;
+    padding: 0; /* Zeramos o padding para a barra de cor encostar na borda */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: sans-serif;
+    font-weight: bold;
+    overflow: hidden; /* Garante que a barra de cor respeite o arredondamento */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: 50px; /* Altura fixa para os cards ficarem iguais */
+}
+
+/* Criamos uma classe para o texto interno ter respiro */
+.card-conteudo {
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.barra-cores {
+    width: 30px; /* Largura da faixa colorida */
+    height: 100%;
+    display: flex;
+    flex-direction: row-reverse; /* Se tiver 2 cores, elas ficam uma em cima da outra */
+}
+
+/* Cada faixa individual de cor */
+.faixa-cor {
+    width: 15px; /* Largura fixa para cada cor não "esmagar" a outra */
+    height: 100%;
+}
+
+/* Container que segura o input e a lista juntos */
+.input-container {
+    position: relative;
+    flex: 1;
+    max-width: 450px; /* Deve ser o mesmo max-width do seu input */
+}
+
+
+/* A caixinha de sugestões */
+#lista-sugestoes {
+    position: absolute;
+    top: 100%; /* Fica exatamente abaixo do input */
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    list-style: none; /* Tira as bolinhas da lista */
+    padding: 0;
+    margin-top: 5px;
+    max-height: 200px; /* Se tiver muita opção, cria uma barra de rolagem */
+    overflow-y: auto;
+    z-index: 1000; /* Garante que fique POR CIMA do mapa */
+    max-height: 250px; /* Limita a altura */
+    overflow-y: auto;  /* Cria barra de rolagem se necessário */
+}
+
+/* Cada item da lista (San... Santa Cruz) */
+#lista-sugestoes li {
+    padding: 12px 15px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    border-bottom: 1px solid #eee;
+    color: #333;
+    font-weight: bold;
+}
+
+#lista-sugestoes li:hover {
+    background-color: #f0f0f0; /* Fica cinza quando passa o mouse */
+}
+
+/* Classe curinga para esconder coisas */
+.escondido {
+    display: none !important;
+}
+
+
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2.2rem;
+    }
+    .legenda {
+        font-size: 0.95rem;
+    }
+    #palpiteInput {
+        width: 100%;
+    }
+}

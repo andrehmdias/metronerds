@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <title>MetroNerds</title>
+        <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
+        <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <div class="faixa-topo"></div>
+
+        <div class="area-titulo">
+            <h1>MetroNerds</h1>
+            <p class="legenda">O melhor site para praticar seu conhecimento sobre o metrô de São Paulo!</p>
+            <div class="faixa-cores-base"></div>
+        </div>
+
+        <div id="mapaDiv"></div>
+
+        <script src="dados.js"> </script>
+        <script src="estacoes.js"></script>
+
+        <div id="controles">
+            <div class="input-container">
+                <input type="text" id="palpiteInput" placeholder="Digite o nome da estação ou linha...">
+                <ul id="lista-sugestoes" class="escondido"></ul>
+            </div>
+            <button onclick="verificarPalpite()">Enviar</button>
+        </div>
+        
+
+        <div id="painel-resultados">
+            <div id="lista-palpites">
+            </div>
+        </div>
+        
+
+    </body> 
+
+
+</html>
