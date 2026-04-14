@@ -11,18 +11,11 @@ body {
 
 /* --- AREA DO CABEÇALHO --- */
 
-.faixa-topo {
-    width: 100%;
-    height: 15px; 
-    background-color: #0455A1; /* Azul Linha 1 */
-    margin-bottom: 30px; 
-}
-
 .area-titulo {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 20px;
+    padding: 40px 20px 20px 20px; /* Um respiro maior no topo da página */
 }
 
 h1 {
@@ -30,24 +23,26 @@ h1 {
     font-size: 3.5rem;
     font-weight: 900;
     letter-spacing: -2px;
-    color: #1a1a1a; /* Texto escuro de volta */
-    margin: 0 0 10px 0; /* Margem apenas embaixo */
+    color: #1a1a1a;
+    margin: 0; /* Tiramos toda a margem para colar na barra */
     text-align: center;
+    line-height: 1;
 }
 
 .legenda {
-    color: #666666; /* Cinza para não brigar com o título */
+    color: #666666;
     font-family: 'Inter', sans-serif;
     font-size: 1.1rem;
     text-align: center;
-    margin: 0 0 15px 0; /* Fica entre o título e as cores */
-    max-width: 600px;
+    margin: 0;
+    max-width: 500px;
 }
 
 .faixa-cores-base {
-    width: 210px; 
+    width: 280px; /* Ajustei a largura para ficar proporcional ao título */
     height: 10px;
-    margin-bottom: 30px; /* Espaço antes do mapa */
+    margin: 5px 0 15px 0; /* 5px de distância do título e 15px da legenda */
+    border-radius: 2px;
     background: linear-gradient(to right, 
         #0455A1 0% 16.6%, 
         #008061 16.6% 33.3%, 
