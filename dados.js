@@ -79,7 +79,7 @@ const todasEstacoes = [
     // LINHA 5 - LILÁS
     // ==========================================
     { "id": "capao_redondo", "nome": "Capão Redondo", "linha": ["lilas"], "zona": "sul", "coordy": -23.6450, "coordx": -46.7760, "conexoes": ["campo_limpo"] },
-    { "id": "campo_limpo", "nome": "Campo Limpo", "linha": ["lilas"], "zona": "sul", "coordy": -23.6450, "coordx": -46.7620, "conexoes": ["capao_redondo", "vila_das_belezas"] },
+    { "id": "campo_limpo", "nome": "Campo Limpo", "linha": ["lilas"], "zona": "sul", "coordy": -23.649271194992007, "coordx": -46.758993843115306, "conexoes": ["capao_redondo", "vila_das_belezas"] },
     { "id": "vila_das_belezas", "nome": "Vila das Belezas", "linha": ["lilas"], "zona": "sul", "coordy": -23.6420, "coordx": -46.7460, "conexoes": ["campo_limpo", "giovanni_gronchi"] },
     { "id": "giovanni_gronchi", "nome": "Giovanni Gronchi", "linha": ["lilas"], "zona": "sul", "coordy": -23.6440, "coordx": -46.7330, "conexoes": ["vila_das_belezas", "santo_amaro"] },
     { "id": "santo_amaro", "nome": "Santo Amaro", "linha": ["lilas"], "zona": "sul", "coordy": -23.6550, "coordx": -46.7180, "conexoes": ["giovanni_gronchi", "largo_treze"] },
