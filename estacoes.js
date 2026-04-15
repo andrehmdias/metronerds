@@ -1,13 +1,13 @@
 // Este array vai guardar os nomes das linhas que o jogador acertar
 let linhasDescobertas = [];
-
+let totalPalpites = 0;
 let estacaoAlvo = null;
 
 const mapaJs = new maplibregl.Map({
     container: 'mapaDiv',
     style: 'https://tiles.openfreemap.org/styles/bright',
     center: [-46.6333, -23.5505], // Centralizado na Sé
-    zoom: 11, // Zoom ajustado para ver a malha toda
+    zoom: 12, // Zoom ajustado para ver a malha toda
     interactive: false,          // Desativa todas as interações de uma vez
     scrollZoom: false,           // Garante que o scroll não mude o zoom
     boxZoom: false,              // Desativa zoom por caixa (Shift+arrastar)
@@ -101,7 +101,7 @@ function iniciarJogo() {
     atualizarBolinha(estacaoAlvo.coordx, estacaoAlvo.coordy);
 
     // Usamos as coordenadas que você já tem no objeto da estação
-    mapaJs.flyTo({
+    mapaJs.jumpTo({
         center: [estacaoAlvo.coordx, estacaoAlvo.coordy],
         zoom: 14, // O zoom que você quer testar
         essential: true 
@@ -253,6 +253,35 @@ function gerarCardPalpite(estacao, alvo) {
     return novoCard;
 }
 
+function exibirModalVitoria() {
+    document.getElementById('nome-estacao-alvo').textContent = estacaoAlvo.nome;
+    document.getElementById('contagem-palpites').textContent = totalPalpites;
+    document.getElementById('modal-vitoria').classList.remove('escondido');
+}
+
+function reiniciarJogo() {
+    // 1. Esconde o modal
+    document.getElementById('modal-vitoria').classList.add('escondido');
+    
+    // 2. Reseta variáveis
+    totalPalpites = 0;
+    linhasDescobertas = [];
+    
+    // 3. Limpa o mapa e a lista
+    document.getElementById('lista-palpites').innerHTML = '';
+    
+    // 4. Sorteia nova estação
+    iniciarJogo();
+    
+    // 5. Atualiza o mapa para as linhas ficarem pretas de novo
+    mapaJs.setPaintProperty('linhas-visuais', 'line-color', [
+        'case',
+        ['in', ['get', 'name'], ['literal', linhasDescobertas]],
+        ['get', 'colour'],
+        '#000000'
+    ]);
+}
+
 
 
 
@@ -304,13 +333,16 @@ mapaJs.on('load', function() {
 
 
 function verificarPalpite() {
-    const chute = document.getElementById('palpiteInput').value.toLowerCase().trim();
+    // Pega o texto e já passa pela sua função mágica que arranca os acentos
+    const chuteLimpo = normalizarTexto(document.getElementById('palpiteInput').value.trim());
 
+    // Procura na lista comparando os dois lados sem acento
     const estacaoEncontrada = todasEstacoes.find(estacao => 
-        estacao.nome.toLowerCase() === chute
+        normalizarTexto(estacao.nome) === chuteLimpo
     );
 
     if (estacaoEncontrada) {
+        totalPalpites++;
         // [PASSO 2 e 3 Juntos] Percorre as linhas da estação e adiciona na memória
         estacaoEncontrada.linha.forEach(cor => {
             const listaDeNomesLongos = nomesOficiaisDasLinhas[cor];
@@ -346,7 +378,9 @@ function verificarPalpite() {
 
         if (estacaoEncontrada.id === estacaoAlvo.id) {
             // 1. O que acontece se ele acertar? 
-            alert("Parabéns!")
+            if (estacaoEncontrada.id === estacaoAlvo.id) {
+            exibirModalVitoria();
+            }
             // - Mudar a cor do input?
             // - Mostrar um botão de "Jogar Novamente"?
         }
