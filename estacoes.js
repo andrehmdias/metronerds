@@ -2,6 +2,15 @@
 let linhasDescobertas = [];
 let totalPalpites = 0;
 let estacaoAlvo = null;
+// ==========================================
+// VARIÁVEIS DO MODO SPRINT
+// ==========================================
+let modoAtual = "classico"; // Pode ser "classico" ou "sprint"
+let tempoSprint = 100;
+let intervaloTimer = null;
+let sprintAcertos = 0;
+let sprintPulos = 0;
+let sprintPalpites = 0;
 
 const mapaJs = new maplibregl.Map({
     container: 'mapaDiv',
@@ -103,7 +112,7 @@ function iniciarJogo() {
     // Usamos as coordenadas que você já tem no objeto da estação
     mapaJs.jumpTo({
         center: [estacaoAlvo.coordx, estacaoAlvo.coordy],
-        zoom: 14, // O zoom que você quer testar
+        zoom: 14.5, // O zoom que você quer testar
         essential: true 
     });
 
@@ -331,6 +340,98 @@ mapaJs.on('load', function() {
 
 });
 
+// ==========================================
+// LÓGICA DO MODO SPRINT
+// ==========================================
+
+function ativarModoSprint() {
+    modoAtual = "sprint";
+    tempoSprint = 100;
+    sprintAcertos = 0;
+    sprintPulos = 0;
+    sprintPalpites = 0;
+    
+    // Mostra o painel amarelo e muda o botão do topo
+    document.getElementById('painel-sprint').classList.remove('escondido');
+    const btnTopo = document.getElementById('btn-modo-sprint');
+    btnTopo.innerHTML = "❌ Sair do Sprint";
+    btnTopo.onclick = sairModoSprint;
+    btnTopo.style.backgroundColor = "#d63031"; // Fica vermelho pra indicar saída
+    
+    // Prepara a tela
+    reiniciarJogo();
+    atualizarPlacarSprint();
+    
+    // Inicia o cronômetro (garante que não tem outro rodando)
+    clearInterval(intervaloTimer);
+    intervaloTimer = setInterval(rodarRelogio, 1000);
+}
+
+function sairModoSprint() {
+    modoAtual = "classico";
+    clearInterval(intervaloTimer);
+    
+    // Esconde o painel amarelo e reseta o botão do topo
+    document.getElementById('painel-sprint').classList.add('escondido');
+    const btnTopo = document.getElementById('btn-modo-sprint');
+    btnTopo.innerHTML = "⏱️ Modo Sprint";
+    btnTopo.onclick = ativarModoSprint;
+    btnTopo.style.backgroundColor = "#333";
+    
+    reiniciarJogo();
+}
+
+function rodarRelogio() {
+    tempoSprint--;
+    document.getElementById('tempo-sprint').textContent = `⏳ ${tempoSprint}s`;
+    
+    if (tempoSprint <= 0) {
+        clearInterval(intervaloTimer);
+        // Calcula a pontuação final (exemplo: Acertos menos os Pulos)
+        let pontuacao = sprintAcertos - sprintPulos;
+        if (pontuacao < 0) pontuacao = 0;
+
+        alert(`⏰ O TEMPO ACABOU!\n\nVocê acertou: ${sprintAcertos} estações\nVocê pulou: ${sprintPulos} vezes\nTotal de Palpites: ${sprintPalpites}\n\n🏆 PONTUAÇÃO FINAL: ${pontuacao}`);
+        
+        sairModoSprint();
+    }
+}
+
+function pularEstacaoSprint() {
+    if (modoAtual !== "sprint") return;
+    
+    sprintPulos++;
+    sprintPalpites += totalPalpites; // Guarda quantos palpites gastou antes de desistir
+    atualizarPlacarSprint();
+    
+    // Reseta a interface para a próxima estação na hora
+    totalPalpites = 0;
+    document.getElementById('lista-palpites').innerHTML = ''; 
+    linhasDescobertas = [];
+    mapaJs.setPaintProperty('linhas-visuais', 'line-color', [
+        'case',
+        ['in', ['get', 'name'], ['literal', linhasDescobertas]],
+        ['get', 'colour'],
+        '#000000'
+    ]);
+    
+    iniciarJogo();
+}
+
+function atualizarPlacarSprint() {
+    document.getElementById('placar-sprint').textContent = `✅ ${sprintAcertos} | ⏭️ ${sprintPulos} | ❌ ${sprintPalpites}`;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 function verificarPalpite() {
     // Pega o texto e já passa pela sua função mágica que arranca os acentos
@@ -377,12 +478,31 @@ function verificarPalpite() {
         document.getElementById('palpiteInput').value = '';
 
         if (estacaoEncontrada.id === estacaoAlvo.id) {
-            // 1. O que acontece se ele acertar? 
             if (estacaoEncontrada.id === estacaoAlvo.id) {
-            exibirModalVitoria();
+                if (modoAtual === "sprint") {
+                    // LÓGICA DO SPRINT: Acertou, soma ponto e vai pra próxima sem parar!
+                    sprintAcertos++;
+                    sprintPalpites += totalPalpites;
+                    atualizarPlacarSprint();
+                    
+                    // Limpa o mapa e a lista na hora
+                    totalPalpites = 0;
+                    document.getElementById('lista-palpites').innerHTML = ''; 
+                    linhasDescobertas = [];
+                    mapaJs.setPaintProperty('linhas-visuais', 'line-color', [
+                        'case',
+                        ['in', ['get', 'name'], ['literal', linhasDescobertas]],
+                        ['get', 'colour'],
+                        '#000000'
+                    ]);
+                    
+                    iniciarJogo(); // Sorteia a próxima
+                    
+                } else {
+                    // LÓGICA CLÁSSICA: Mostra a tela de vitória
+                    exibirModalVitoria();
+                }
             }
-            // - Mudar a cor do input?
-            // - Mostrar um botão de "Jogar Novamente"?
         }
 
 

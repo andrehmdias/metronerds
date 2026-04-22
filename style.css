@@ -15,7 +15,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40px 20px 20px 20px; /* Um respiro maior no topo da página */
+    padding: 20px 20px 20px 20px; /* Um respiro maior no topo da página */
 }
 
 h1 {
@@ -270,4 +270,76 @@ button {
     #palpiteInput {
         width: 100%;
     }
+}
+
+
+
+
+
+/* ==========================================
+   MODO SPRINT - CSS 
+   ========================================== */
+
+/* Botão que fica lá no topo, perto do título */
+.btn-topo {
+    position: absolute; /* Coloca o botão flutuando na esquerda */
+    top: 15px;
+    left: 15px;
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: background-color 0.2s;
+}
+
+.btn-topo:hover { 
+    background-color: #555555; 
+}
+
+/* Como o botão está "flutuando", garantimos que a área do título seja a referência dele */
+.area-titulo {
+    position: relative; 
+}
+
+/* O painel de status (Tempo e Acertos) */
+#painel-sprint {
+    background-color: #ffeaa7; /* Um amarelo suave para destacar */
+    color: #2d3436;
+    padding: 12px 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin: 10px auto;
+    max-width: 600px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.status-sprint {
+    display: flex;
+    gap: 20px;
+    font-size: 1.1rem;
+}
+
+/* Botão de Pular Estação */
+#btn-pular {
+    background-color: #d63031; /* Vermelho para chamar atenção */
+    color: #ffffff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.1s;
+}
+
+#btn-pular:active {
+    transform: scale(0.95); /* Dá um efeitinho de "apertar" quando clica */
 }

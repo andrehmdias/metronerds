@@ -3,6 +3,19 @@
 <html>
 
     <head>
+
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-62FD0S6112"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-62FD0S6112');
+        </script>
+
+
+
         <title>MetroNerds</title>
         <link rel="icon" type="image/png" href="favicon.png">
         <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
@@ -14,10 +27,21 @@
     <body>
 
         <div class="area-titulo">
+            <button id="btn-modo-sprint" onclick="ativarModoSprint()" class="btn-topo">⏱️ 100 segundos!</button>
+
             <h1>MetroNerds</h1>
             <div class="faixa-cores-base"></div>
             <p class="legenda">O melhor site para praticar seu conhecimento sobre o metrô de São Paulo!</p>
         </div>
+
+        <div id="painel-sprint" class="escondido">
+            <div class="status-sprint">
+                <span id="tempo-sprint">⏳ 100s</span>
+                <span id="placar-sprint">✅ 0 | ⏭️ 0 | ❌ 0</span>
+            </div>
+            <button id="btn-pular" onclick="pularEstacaoSprint()">⏭️ Pular</button>
+        </div>
+
 
         <div id="mapaDiv"></div>
 
