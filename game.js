@@ -80,23 +80,34 @@ function reiniciarJogo() {
     
     // 2. Injeta as caixinhas do modo Clássico com emojis
     const caixaEstatisticas = document.querySelector('.estatisticas-vitoria');
-    caixaEstatisticas.innerHTML = `
-        <div class="estat-item">
-            <span id="contagem-palpites">0</span>
-            <p>🎯 Palpites</p>
-        </div>
-        <div class="estat-item">
-            <span id="contagem-extra">--</span>
-            <p>⏱️ Tempo</p>
-        </div>
-    `;
+    if (caixaEstatisticas) {
+        caixaEstatisticas.innerHTML = `
+            <div class="estat-item">
+                <span id="contagem-palpites">0</span>
+                <p>🎯 Palpites</p>
+            </div>
+            <div class="estat-item">
+                <span id="contagem-extra">--</span>
+                <p>⏱️ Tempo</p>
+            </div>
+        `;
+    }
 
+    // 3. Esconde o modal de vitória
     document.getElementById('modal-vitoria').classList.add('escondido');
     
+    // 4. Reseta as variáveis de controle
     totalPalpites = 0;
     linhasDescobertas = [];
-    document.getElementById('lista-palpites').innerHTML = '';
     
+    // 5. LIMPEZA DA TELA: Apaga os palpites e volta o scroll pro topo
+    document.getElementById('lista-palpites').innerHTML = '';
+    const painelResultados = document.getElementById('painel-resultados');
+    if (painelResultados) {
+        painelResultados.scrollTop = 0;
+    }
+    
+    // 6. Sorteia nova estação e reseta o mapa
     iniciarJogo();
     atualizarCoresLinhas(linhasDescobertas);
 }
@@ -107,16 +118,15 @@ function reiniciarJogo() {
 // ==========================================
 function ativarModoSprint() {
     modoAtual = "sprint";
+    document.getElementById('indicador-modo').textContent = "⏱️ 100s!";
     tempoSprint = 100;
     sprintAcertos = 0;
     sprintPulos = 0;
     sprintPalpites = 0;
     
     document.getElementById('painel-sprint').classList.remove('escondido');
-    const btnTopo = document.getElementById('btn-modo-sprint');
-    btnTopo.innerHTML = "❌ Sair do Sprint";
-    btnTopo.style.backgroundColor = "#d63031";
     
+    // Chamamos o reset do jogo para começar do zero no novo modo
     reiniciarJogo();
     atualizarPlacarSprint(sprintAcertos, sprintPulos, sprintPalpites);
     
@@ -126,12 +136,10 @@ function ativarModoSprint() {
 
 function sairModoSprint() {
     modoAtual = "classico";
+    document.getElementById('indicador-modo').textContent = "✨ Padrão";
     clearInterval(intervaloTimer);
     
     document.getElementById('painel-sprint').classList.add('escondido');
-    const btnTopo = document.getElementById('btn-modo-sprint');
-    btnTopo.innerHTML = "⏱️ 100 segundos!";
-    btnTopo.style.backgroundColor = ""; // Reseta a cor para o padrão do CSS
     
     reiniciarJogo();
 }
@@ -148,12 +156,11 @@ function rodarRelogio() {
     if (tempoSprint <= 0) {
         clearInterval(intervaloTimer);
         
-        // 1. Textos principais do modal
+        // Exibe o modal com os resultados
         document.getElementById('modal-emoji').textContent = "⏰";
         document.getElementById('modal-titulo').textContent = "TEMPO ESGOTADO!";
         document.getElementById('texto-vitoria').innerHTML = `A rodada acabou! Veja seu desempenho:`;
         
-        // 2. Injeta apenas as 3 caixinhas de dados reais (Acertos, Erros e Pulos)
         const caixaEstatisticas = document.querySelector('.estatisticas-vitoria');
         caixaEstatisticas.innerHTML = `
             <div class="estat-item">
@@ -172,12 +179,10 @@ function rodarRelogio() {
 
         document.getElementById('modal-vitoria').classList.remove('escondido');
         
-        // Finaliza o modo e reseta botões
+        // Finaliza o modo e esconde o painel
         modoAtual = "classico"; 
         document.getElementById('painel-sprint').classList.add('escondido');
-        const btnTopo = document.getElementById('btn-modo-sprint');
-        btnTopo.innerHTML = "⏱️ 100 segundos!";
-        btnTopo.style.backgroundColor = "";
+        document.getElementById('indicador-modo').textContent = "✨ Padrão";
     }
 }
 
@@ -232,7 +237,15 @@ function verificarPalpite() {
 
         // Gerar card visual
         const cardPronto = gerarCardPalpite(estacaoEncontrada, estacaoAlvo, DB_ESTACOES, DB_CORES);
-        document.getElementById('lista-palpites').prepend(cardPronto);
+        
+        // Troca o "prepend" (coloca no topo) por "appendChild" (coloca no fim)
+        const listaPalpites = document.getElementById('lista-palpites');
+        listaPalpites.appendChild(cardPronto);
+
+        // Força a área rolar para o fundo para mostrar o palpite novo
+        const painelResultados = document.getElementById('painel-resultados');
+        painelResultados.scrollTop = painelResultados.scrollHeight;
+
         input.value = '';
 
         // CONDIÇÃO DE ACERTO
@@ -264,10 +277,83 @@ document.getElementById('btn-enviar').addEventListener('click', verificarPalpite
 document.getElementById('btn-jogar-novamente').addEventListener('click', reiniciarJogo);
 document.getElementById('btn-pular').addEventListener('click', pularEstacaoSprint);
 
-document.getElementById('btn-modo-sprint').addEventListener('click', function() {
-    if (modoAtual === "classico") {
-        ativarModoSprint();
-    } else {
-        sairModoSprint();
+// ==========================================
+// CONTROLES DO MENU DE MODOS
+// ==========================================
+const btnMenuModos = document.getElementById('btn-menu-modos');
+const dropdownModos = document.getElementById('dropdown-modos');
+const opcaoPadrao = document.getElementById('opcao-padrao');
+const opcaoSprint = document.getElementById('opcao-sprint');
+
+// 1. Abre/Fecha o menu quando clica no botão "Modos"
+btnMenuModos.addEventListener('click', function(e) {
+    e.stopPropagation(); // Impede o clique de fechar o menu imediatamente
+    dropdownModos.classList.toggle('escondido');
+});
+
+// 2. Esconde o menu se o jogador clicar em qualquer outro lugar da tela
+document.addEventListener('click', function(e) {
+    if (!dropdownModos.classList.contains('escondido')) {
+        dropdownModos.classList.add('escondido');
     }
+});
+
+// 3. Ao clicar na opção "Padrão"
+opcaoPadrao.addEventListener('click', function() {
+    // Só faz alguma coisa se já não estiver no modo padrão
+    if (typeof modoAtual !== 'undefined' && modoAtual !== "classico") {
+        sairModoSprint(); // Chama a sua função que já existe
+    }
+    dropdownModos.classList.add('escondido'); // Fecha o menu
+});
+
+// 4. Ao clicar na opção "100 Segundos"
+opcaoSprint.addEventListener('click', function() {
+    // Só ativa se já não estiver no modo sprint
+    if (typeof modoAtual === 'undefined' || modoAtual !== "sprint") {
+        ativarModoSprint(); // Chama a sua função que já existe
+    }
+    dropdownModos.classList.add('escondido'); // Fecha o menu
+});
+
+
+
+// ==========================================
+// CONTROLES DO TECLADO VIRTUAL
+// ==========================================
+const inputPalpite = document.getElementById('palpiteInput');
+const teclas = document.querySelectorAll('.tecla');
+const areaTeclado = document.getElementById('teclado-virtual'); // <--- Pega o teclado todo
+
+// 1. O ESCUDO: Impede que qualquer clique no teclado avise o ui.js para fechar a lista
+areaTeclado.addEventListener('click', function(e) {
+    e.stopPropagation();
+});
+
+areaTeclado.addEventListener('pointerdown', function(e) {
+    e.stopPropagation();
+});
+
+// 2. A MÁQUINA DE ESCREVER (Abaixo fica o seu código que já estava funcionando)
+teclas.forEach(tecla => {
+    tecla.addEventListener('pointerdown', function(e) {
+        e.preventDefault(); 
+
+        const valorTecla = this.textContent;
+
+        if (this.id === 'tecla-apagar') {
+            inputPalpite.value = inputPalpite.value.slice(0, -1);
+        } 
+        else if (this.id === 'tecla-espaco') {
+            inputPalpite.value += ' ';
+        } 
+        else {
+            inputPalpite.value += valorTecla;
+        }
+
+        inputPalpite.focus();
+
+        const eventoInput = new Event('input', { bubbles: true });
+        inputPalpite.dispatchEvent(eventoInput);
+    });
 });

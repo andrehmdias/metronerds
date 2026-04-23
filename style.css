@@ -1,47 +1,155 @@
 /* No topo do seu CSS, importe a fonte Inter (irmã da Helvetica) */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
 
-body {
-    font-family: 'Inter', sans-serif; /* Aplica para o site todo */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: 'Inter', sans-serif;
     background-color: #ffffff;
     margin: 0;
     padding: 0;
-    font-family: 'Inter', sans-serif;
+    width: 100%;
+    
+    /* AS TRAVAS DO APLICATIVO */
+    height: 100dvh; 
+    overflow: hidden; /* Corta o scroll da página inteira */
+    display: flex;
+    flex-direction: column; /* Faz tudo empilhar e respeitar a altura da tela */
 }
 
 /* --- AREA DO CABEÇALHO --- */
 
-.area-titulo {
+.cabecalho-app {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 20px 20px 20px 20px; /* Um respiro maior no topo da página */
+    align-items: center; /* Centraliza a faixa de cores embaixo de tudo */
+    width: 100%;
+    max-width: 600px; /* Largura máxima para não espalhar muito no PC */
+    margin: 0 auto;
+    padding: 15px 15px 5px 15px; 
 }
+
+/* A Mágica: Divide a linha em 3 (Esquerda, Centro exato, Direita) */
+.linha-do-titulo {
+    display: flex;
+    justify-content: center; /* Centraliza o grupo todo */
+    align-items: center;     /* Alinha verticalmente no meio */
+    gap: 15px;               /* A DISTÂNCIA AQUI: ajuste como preferir (10px, 20px...) */
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+/* Alinhamentos das pontas */
+/* ==========================================
+   MENU DROPDOWN DE MODOS
+   ========================================== */
+
+/* Isso segura o dropdown colado no botão Modos */
+.container-menu {
+    position: relative; 
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-modos {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    
+    /* A MÁGICA DO VIDRO FOSCO REPETIDA AQUI */
+    background: rgba(255, 255, 255, 0.55); /* Mesmo 0.55 de opacidade que você escolheu */
+    backdrop-filter: blur(2px);            /* Mesmo blur de 2px */
+    -webkit-backdrop-filter: blur(2px);    /* Suporte para iPhone */
+    
+    /* Uma bordinha clara ajuda a destacar o vidro do fundo */
+    border: 1px solid rgba(255, 255, 255, 0.3); 
+    
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    list-style: none;
+    padding: 5px 0;
+    width: max-content;
+    z-index: 2000;
+    overflow: hidden; /* Garante que o efeito de hover não escape das pontas arredondadas */
+}
+
+/* Para as opções ficarem bonitas no vidro, vamos deixá-las transparentes também */
+.opcao-modo {
+    padding: 12px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #1a1a1a;
+    cursor: pointer;
+    background-color: transparent; /* Fundamental para o vidro aparecer atrás */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: background-color 0.2s;
+}
+
+/* Tira a linha de divisão do último item */
+.opcao-modo:last-child {
+    border-bottom: none;
+}
+
+.opcao-modo:hover {
+    /* No hover, a gente dá um "brilho" ou escurece de leve */
+    background-color: rgba(0, 0, 0, 0.05); 
+    color: #0455A1;
+}
+
+/* Tira a linha de divisão do último item */
+.opcao-modo:last-child {
+    border-bottom: none;
+}
+
+.opcao-modo:hover {
+    background-color: #f8f9fa;
+    color: #0455A1; /* Fica azul quando passa o mouse/dedo */
+}
+
 
 h1 {
-    font-family: 'Inter', sans-serif;
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     font-weight: 900;
-    letter-spacing: -2px;
-    color: #1a1a1a;
-    margin: 0; /* Tiramos toda a margem para colar na barra */
-    text-align: center;
+    letter-spacing: -1.5px;
+    margin: 0;
     line-height: 1;
+    color: #1a1a1a;
 }
 
-.legenda {
-    color: #666666;
+/* O Botão de Modos (Discreto) */
+.btn-modos {
+    background-color: #f1f3f5;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: #333;
+    cursor: pointer;
     font-family: 'Inter', sans-serif;
-    font-size: 1.1rem;
-    text-align: center;
-    margin: 0;
-    max-width: 500px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
+
+.btn-modos:active {
+    transform: scale(0.95);
+}
+
+/* O texto indicando o modo */
+.modo-texto {
+    font-weight: 900;
+    font-size: 0.85rem;
+    color: #555; 
+}
+
 
 .faixa-cores-base {
     width: 280px; /* Ajustei a largura para ficar proporcional ao título */
     height: 10px;
-    margin: 5px 0 15px 0; /* 5px de distância do título e 15px da legenda */
+    margin: 5px 0 5px 0; /* 5px de distância do título e 15px da legenda */
     border-radius: 2px;
     background: linear-gradient(to right, 
         #0455A1 0% 16.6%, 
@@ -52,6 +160,7 @@ h1 {
         #8A8C8E 83.3% 100%
     );
 }
+
 
 /* --- FIM DA AREA DO CABEÇALHO --- */
 
@@ -80,15 +189,17 @@ button {
     justify-content: center;
     gap: 15px;
     padding: 10px;
+    flex-shrink: 0;
 }
 
 #mapaDiv {
     width: 95%;          /* No celular, ocupa quase tudo */
     max-width: 800px;     /* No computador, trava em 800px */
-    height: 350px;        /* Altura fixa ou use 'vh' para ser proporcional à tela */
+    height: 350px;        /* ALTURA PARA PC - Altura fixa ou use 'vh' para ser proporcional à tela */
     margin: 0 auto;
     border-radius: 12px;
     pointer-events: none; /* Isso faz com que qualquer clique "atravesse" o mapa como se ele fosse um fantasma */
+    flex-shrink: 0;
 }
 
 #lista-palpites {
@@ -145,40 +256,6 @@ button {
     max-width: 450px; /* Deve ser o mesmo max-width do seu input */
 }
 
-
-/* A caixinha de sugestões */
-#lista-sugestoes {
-    position: absolute;
-    top: 100%; /* Fica exatamente abaixo do input */
-    left: 0;
-    width: 100%;
-    background: white;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    list-style: none; /* Tira as bolinhas da lista */
-    padding: 0;
-    margin-top: 5px;
-    max-height: 200px; /* Se tiver muita opção, cria uma barra de rolagem */
-    overflow-y: auto;
-    z-index: 1000; /* Garante que fique POR CIMA do mapa */
-    max-height: 250px; /* Limita a altura */
-    overflow-y: auto;  /* Cria barra de rolagem se necessário */
-}
-
-/* Cada item da lista (San... Santa Cruz) */
-#lista-sugestoes li {
-    padding: 12px 15px;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    border-bottom: 1px solid #eee;
-    color: #333;
-    font-weight: bold;
-}
-
-#lista-sugestoes li:hover {
-    background-color: #f0f0f0; /* Fica cinza quando passa o mouse */
-}
 
 /* Classe curinga para esconder coisas */
 .escondido {
@@ -260,50 +337,19 @@ button {
 
 
 
-@media (max-width: 600px) {
-    h1 {
-        font-size: 2.2rem;
-    }
-    .legenda {
-        font-size: 0.95rem;
-    }
-    #palpiteInput {
-        width: 100%;
-    }
-}
-
-
-
-
-
 /* ==========================================
    MODO SPRINT - CSS 
    ========================================== */
 
 /* Botão que fica lá no topo, perto do título */
-.btn-topo {
-    position: absolute; /* Coloca o botão flutuando na esquerda */
-    top: 15px;
-    left: 15px;
-    background-color: #333333;
-    color: #ffffff;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 0.9rem;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    transition: background-color 0.2s;
-}
 
-.btn-topo:hover { 
-    background-color: #555555; 
-}
 
-/* Como o botão está "flutuando", garantimos que a área do título seja a referência dele */
-.area-titulo {
-    position: relative; 
+/* Essa é a MOLA: Ela cresce e ocupa todo o espaço vazio, empurrando o teclado lá pro fundo! */
+#painel-resultados {
+    flex: 1; 
+    width: 100%;
+    overflow-y: auto; /* Cria a barra de rolagem APENAS para os palpites */
+    padding: 10px 0;
 }
 
 /* O painel de status (Tempo e Acertos) */
@@ -342,4 +388,155 @@ button {
 
 #btn-pular:active {
     transform: scale(0.95); /* Dá um efeitinho de "apertar" quando clica */
+}
+
+
+/* 2. MUDANÇAS NA LISTA DE SUGESTÕES (TRANSPARÊNCIA) */
+#lista-sugestoes {
+    position: absolute;
+    bottom: 100%; /* Faz a lista crescer PARA CIMA, cobrindo o mapa */
+    top: auto;    /* Garante que ela não desça */
+    left: 0;
+    width: 100%;
+    
+    /* A Mágica do Vidro Fosco (Glassmorphism) */
+    background: rgba(255, 255, 255, 0.55); /* Branco com 85% de opacidade */
+    backdrop-filter: blur(2px); /* Embaça o mapa que estiver atrás */
+    -webkit-backdrop-filter: blur(2px); /* Suporte para iPhones */
+    
+    border: 2px solid rgba(200, 200, 200, 0.5); /* Borda mais suave */
+    border-radius: 8px;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.1); /* Sombra invertida (pra cima) */
+    list-style: none;
+    padding: 0;
+    margin-bottom: 5px; /* Distância do input */
+    
+    /* O limite de tamanho que impede de subir em cima do título */
+    max-height: 200px; 
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+/* Deixa o fundo do item transparente para a mágica do vidro fosco funcionar */
+#lista-sugestoes li {
+    padding: 12px 15px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    color: #333;
+    font-weight: bold;
+    background-color: transparent; 
+}
+
+#lista-sugestoes li:hover {
+    background-color: rgba(0, 0, 0, 0.05); /* Fica levemente cinza no hover */
+}
+
+
+
+
+/* ==========================================
+   TECLADO VIRTUAL (Estilo Termo)
+   ========================================== */
+.teclado-virtual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 15px auto 0 auto;
+    
+    /* Garante que o teclado nunca toque na borda da tela */
+    padding: 0 10px; 
+    box-sizing: border-box; 
+    
+    /* Espaço vertical entre as linhas */
+    gap: 6px; 
+    touch-action: manipulation; 
+    flex-shrink: 0;
+    padding-bottom: 15px
+}
+
+.linha-teclado {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    /* Diminuímos o gap horizontal para caber melhor no celular */
+    gap: 4px; 
+}
+
+.tecla {
+    padding: 0px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    background-color: #d3d6da;
+    color: #1a1a1b;
+    height: 50px;
+    flex: 1; /* Faz as teclas dividirem o espaço igualmente */
+    min-width: 0;
+    max-width: 40px; /* Impede que fiquem gigantes na tela do PC */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none; /* Evita selecionar o texto da tecla igual um texto normal */
+    transition: background-color 0.1s, transform 0.05s;
+    -webkit-tap-highlight-color: transparent; /* Remove aquele quadrado azul ao clicar no iPhone */
+    user-select: none; /* Impede de "selecionar" a letra ao clicar rápido */
+}
+
+/* O efeito de "clique físico" */
+.tecla:active {
+    background-color: #787c7e;
+    color: white;
+    transform: scale(0.92); 
+}
+
+.tecla-acao {
+    flex: 1.5; /* Teclas de apagar e enviar são um pouco mais largas */
+    max-width: 65px;
+    font-size: 0.9rem;
+}
+
+.tecla-acao.especial {
+    background-color: #0455A1; /* O azul bonito que você já usa */
+    color: white;
+}
+
+.tecla-espaco {
+    flex: 3;
+    max-width: 150px;
+}
+
+
+@media (max-width: 600px) {
+
+    .linha-do-titulo {
+        gap: 8px; /* Gap menor no celular para caber tudo apertadinho */
+    }
+    
+    h1 {
+        font-size: 2.2rem;
+    }
+    #palpiteInput {
+        width: 100%;
+    }
+    .tecla {
+        height: 55px; /* Tecla um pouquinho mais baixa no celular */
+        font-size: 0.9rem; /* Letra um pouquinho menor pra caber os 10 botões */
+    }
+    .linha-teclado {
+        gap: px; /* Espaço entre as teclas levemente menor */
+    }
+    #mapaDiv {
+        height: 220px; /* Reduzimos de 350px para 220px no celular */
+    }
+    .tecla {
+        height: 40px; /* Era 50px ou 45px. 40px ainda é clicável e economiza muito espaço */
+        font-size: 0.9rem;
+    }
+
 }
