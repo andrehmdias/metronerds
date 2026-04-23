@@ -53,13 +53,35 @@ mapaJs.on('load', function() {
     console.log("Mapa e camadas carregadas com sucesso!");
     configurarCamadaBolinha();
     configurarAutocompletar(DB_ESTACOES);
+
+    preencherPlaceholders();
     iniciarJogo();
 });
+
+
+
+// ==========================================
+// FUNÇÃO DOS ESPAÇOS VAZIOS (PLACEHOLDERS)
+// ==========================================
+function preencherPlaceholders() {
+    const lista = document.getElementById('lista-palpites');
+    lista.innerHTML = ''; // Limpa tudo
+    
+    // Cria 4 blocos cinzas
+    for(let i = 0; i < 4; i++) {
+        const bloco = document.createElement('div');
+        bloco.className = 'card-placeholder';
+        lista.appendChild(bloco);
+    }
+}
+
 
 
 // ==========================================
 // FUNÇÕES BASE DO JOGO
 // ==========================================
+
+
 function iniciarJogo() {
     const indiceAleatorio = Math.floor(Math.random() * DB_ESTACOES.length);
     estacaoAlvo = DB_ESTACOES[indiceAleatorio];
@@ -102,6 +124,8 @@ function reiniciarJogo() {
     
     // 5. LIMPEZA DA TELA: Apaga os palpites e volta o scroll pro topo
     document.getElementById('lista-palpites').innerHTML = '';
+    preencherPlaceholders();
+
     const painelResultados = document.getElementById('painel-resultados');
     if (painelResultados) {
         painelResultados.scrollTop = 0;
@@ -196,6 +220,8 @@ function pularEstacaoSprint() {
     
     totalPalpites = 0;
     document.getElementById('lista-palpites').innerHTML = ''; 
+    preencherPlaceholders();
+    
     linhasDescobertas = [];
     atualizarCoresLinhas(linhasDescobertas);
     iniciarJogo();
@@ -237,14 +263,26 @@ function verificarPalpite() {
 
         // Gerar card visual
         const cardPronto = gerarCardPalpite(estacaoEncontrada, estacaoAlvo, DB_ESTACOES, DB_CORES);
-        
-        // Troca o "prepend" (coloca no topo) por "appendChild" (coloca no fim)
-        const listaPalpites = document.getElementById('lista-palpites');
-        listaPalpites.appendChild(cardPronto);
 
-        // Força a área rolar para o fundo para mostrar o palpite novo
+        const listaPalpites = document.getElementById('lista-palpites');
+        const blocosVazios = listaPalpites.querySelectorAll('.card-placeholder');
+
+        // A MÁGICA INTELIGENTE DA ROLAGEM
         const painelResultados = document.getElementById('painel-resultados');
-        painelResultados.scrollTop = painelResultados.scrollHeight;
+
+        if (blocosVazios.length > 0) {
+            // Se substituiu um bloco cinza (topo da lista), garante que a tela fique no topo
+            blocosVazios[0].replaceWith(cardPronto);
+            if (painelResultados) {
+                painelResultados.scrollTop = 0; 
+            }
+        } else {
+            // Se acabaram os blocos cinzas e a lista está crescendo, rola para o fundo
+            listaPalpites.appendChild(cardPronto);
+            if (painelResultados) {
+                painelResultados.scrollTop = painelResultados.scrollHeight;
+            }
+        }
 
         input.value = '';
 
@@ -257,7 +295,9 @@ function verificarPalpite() {
                 
                 // Limpa a rodada para a próxima estação
                 totalPalpites = 0;
-                document.getElementById('lista-palpites').innerHTML = ''; 
+                document.getElementById('lista-palpites').innerHTML = '';
+                preencherPlaceholders();
+
                 linhasDescobertas = [];
                 atualizarCoresLinhas(linhasDescobertas);
                 iniciarJogo(); 
@@ -333,6 +373,48 @@ areaTeclado.addEventListener('click', function(e) {
 areaTeclado.addEventListener('pointerdown', function(e) {
     e.stopPropagation();
 });
+
+
+
+// ==========================================
+// SUPORTE AO TECLADO FÍSICO (GLOBAL)
+// ==========================================
+document.addEventListener('keydown', function(e) {
+    const input = document.getElementById('palpiteInput');
+    const modalVitoria = document.getElementById('modal-vitoria');
+
+    // 1. Trava de segurança: Se a tela de vitória estiver aberta, o teclado físico desliga
+    if (!modalVitoria.classList.contains('escondido')) {
+        return; 
+    }
+
+    // 2. Se a pessoa apertar ENTER
+    if (e.key === 'Enter') {
+        if (input.value.trim() !== '') {
+            e.preventDefault(); 
+            verificarPalpite();
+            
+            // Esconde a lista de sugestões após enviar
+            const listaSugestoes = document.getElementById('lista-sugestoes');
+            if(listaSugestoes) listaSugestoes.classList.add('escondido');
+            
+            input.focus(); // Já deixa engatilhado pro próximo palpite
+        }
+        return;
+    }
+
+    // 3. A MÁGICA DO FOCO AUTOMÁTICO:
+    // Se o jogador digitar uma letra, número, apagar ou espaço E não estiver clicado na caixa...
+    if (document.activeElement !== input) {
+        // Verifica se a tecla apertada tem apenas 1 caractere (como 'a', 'x', '1') ou se é o Backspace
+        if (e.key.length === 1 || e.key === 'Backspace') {
+            input.focus(); // Joga o cursor pra caixa invisivelmente antes da letra cair lá
+        }
+    }
+});
+
+
+
 
 // 2. A MÁQUINA DE ESCREVER (Abaixo fica o seu código que já estava funcionando)
 teclas.forEach(tecla => {

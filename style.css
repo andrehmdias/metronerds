@@ -203,7 +203,7 @@ button {
 }
 
 #lista-palpites {
-    margin-top: 20px;
+    margin-top: 0px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -225,6 +225,17 @@ button {
     overflow: hidden; /* Garante que a barra de cor respeite o arredondamento */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     height: 50px; /* Altura fixa para os cards ficarem iguais */
+}
+
+/* O espaço reservado para os palpites futuros */
+.card-placeholder {
+    background-color: #e9ecef; /* Um cinza beeeem clarinho e suave */
+    height: 50px; /* Exatamente a mesma altura do card original */
+    border-radius: 8px;
+    width: 100%;
+    /* Uma sombrinha interna pra dar a ideia de que é um "buraco" esperando algo */
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); 
+    opacity: 0.7; /* Deixa ele meio apagadinho */
 }
 
 /* Criamos uma classe para o texto interno ter respiro */
@@ -343,13 +354,26 @@ button {
 
 /* Botão que fica lá no topo, perto do título */
 
+/* Espaçamento interno do placar do modo Sprint */
+#placar-sprint {
+    /* Adiciona um espaço extra entre os itens separados por | */
+    letter-spacing: 0.5px; 
+}
+
+/* Se você quiser um controle ainda mais fino, podemos dar espaço especificamente 
+   nas laterais dos separadores ou dos itens. */
+.status-sprint span {
+    display: inline-block;
+    padding: 0 10px; /* Dá um respiro de 5px em cada lado de cada contador */
+}
+
 
 /* Essa é a MOLA: Ela cresce e ocupa todo o espaço vazio, empurrando o teclado lá pro fundo! */
 #painel-resultados {
     flex: 1; 
     width: 100%;
     overflow-y: auto; /* Cria a barra de rolagem APENAS para os palpites */
-    padding: 10px 0;
+    padding: 0 0 0px 0;
 }
 
 /* O painel de status (Tempo e Acertos) */
@@ -539,4 +563,17 @@ button {
         font-size: 0.9rem;
     }
 
+}
+
+
+
+
+
+/* ==========================================
+   REGRAS PARA PC (Telas maiores)
+   ========================================== */
+@media (min-width: 601px) {
+    .teclado-virtual {
+        display: none !important; /* Extermina o teclado virtual no PC */
+    }
 }
