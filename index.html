@@ -1,20 +1,13 @@
 <!DOCTYPE html>
-
 <html>
-
     <head>
-
-        <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-62FD0S6112"></script>
         <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-62FD0S6112');
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-62FD0S6112');
         </script>
-
-
 
         <title>MetroNerds</title>
         <link rel="icon" type="image/png" href="favicon.png">
@@ -25,9 +18,8 @@
     </head>
 
     <body>
-
         <div class="area-titulo">
-            <button id="btn-modo-sprint" onclick="ativarModoSprint()" class="btn-topo">⏱️ 100 segundos!</button>
+            <button id="btn-modo-sprint" class="btn-topo">⏱️ 100 segundos!</button>
 
             <h1>MetroNerds</h1>
             <div class="faixa-cores-base"></div>
@@ -39,53 +31,45 @@
                 <span id="tempo-sprint">⏳ 100s</span>
                 <span id="placar-sprint">✅ 0 | ⏭️ 0 | ❌ 0</span>
             </div>
-            <button id="btn-pular" onclick="pularEstacaoSprint()">⏭️ Pular</button>
+            <button id="btn-pular">⏭️ Pular</button>
         </div>
-
 
         <div id="mapaDiv"></div>
 
-        <script src="dados.js"> </script>
-        <script src="estacoes.js"></script>
+        <script src="dados.js"></script>
+        <script type="module" src="game.js"></script>
 
         <div id="controles">
             <div class="input-container">
                 <input type="text" id="palpiteInput" placeholder="Digite o nome da estação ou linha...">
                 <ul id="lista-sugestoes" class="escondido"></ul>
             </div>
-            <button onclick="verificarPalpite()">Enviar</button>
+            <button id="btn-enviar">Enviar</button>
         </div>
-        
 
         <div id="painel-resultados">
-            <div id="lista-palpites">
-            </div>
+            <div id="lista-palpites"></div>
         </div>
         
-                <div id="modal-vitoria" class="modal-overlay escondido">
+        <div id="modal-vitoria" class="modal-overlay escondido">
             <div class="modal-conteudo">
-                <span class="emoji-vitoria">🎉</span>
-                <h2>VOCÊ CONSEGUIU!</h2>
+                <span id="modal-emoji" class="emoji-vitoria">🎉</span>
+                <h2 id="modal-titulo">VOCÊ CONSEGUIU!</h2>
                 <p id="texto-vitoria">A estação secreta era <strong id="nome-estacao-alvo">---</strong>.</p>
                 
                 <div class="estatisticas-vitoria">
                     <div class="estat-item">
                         <span id="contagem-palpites">0</span>
-                        <p>Palpites</p>
+                        <p id="label-palpites">Palpites</p>
                     </div>
                     <div class="estat-item">
-                        <span>--</span>
-                        <p>Tempo</p>
+                        <span id="contagem-extra">--</span>
+                        <p id="label-extra">Tempo</p>
                     </div>
                 </div>
 
-                <button onclick="reiniciarJogo()" class="btn-jogar-novamente">JOGAR NOVAMENTE</button>
+                <button id="btn-jogar-novamente" class="btn-jogar-novamente">JOGAR NOVAMENTE</button>
             </div>
         </div>
-
-
-
     </body> 
-
-
 </html>
